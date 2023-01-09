@@ -1,6 +1,7 @@
-let tituloPrato;
-let tituloBebida;
-let tituloSobremesa;
+let tituloPrato, tituloBebida, tituloSobremesa;
+let precoPrato, precoBebida, precoSobremesa;
+let precoTotal;
+
 
 function selecionarPrato(pratoClickado, seletorTitulo){ //pegar o prato que foi clickado e trazer para o JS (usando o this)
 
@@ -18,9 +19,14 @@ function selecionarPrato(pratoClickado, seletorTitulo){ //pegar o prato que foi 
 
     //pegar titulo do prato
     const elementoTitulo = document.querySelector(seletorTitulo+' .titulo');
+    //pegar preço do prato
+    const elementoPreco = document.querySelector(seletorTitulo+' .preco')
 
     //pegar o texto que está no elemento
     tituloPrato = elementoTitulo.innerHTML;
+
+    //pegar o preço do elemento
+    precoPrato = elementoPreco.innerHTML;
 
     ativarBotaoFecharPedido();
 }
@@ -39,11 +45,17 @@ function selecionarBebida(bebidaClickada, seletorTitulo){ //pegar a bebida que f
     //marcar como selecionada, adicionando a classe 'selecionado'
     bebidaClickada.classList.add('selecionado');
 
-    //pegar o titulo
+    //pegar o titulo da bebida
     const elementoTitulo = document.querySelector(seletorTitulo+' .titulo');
+
+    //pegar o preço da bebida
+    const elementoPreco = document.querySelector(seletorTitulo+' .preco');
 
     //pegar o texto que está no elemento
     tituloBebida = elementoTitulo.innerHTML;
+
+    //pegar o preço que está no elemento
+    precoBebida = elementoPreco.innerHTML
 
     ativarBotaoFecharPedido();
 }
@@ -62,11 +74,17 @@ function selecionarSobremesa(sobremesaClickada, seletorTitulo){ //pegar a sobrem
     //marcar como selecionada, adicionando a classe 'selecionado'
     sobremesaClickada.classList.add('selecionado');
 
-    //pegar o titulo
+    //pegar o titulo da sobremesa
     const elementoTitulo = document.querySelector(seletorTitulo+' .titulo');
+
+    //pegar o preço da sobremesa
+    const elementoPreco = document.querySelector(seletorTitulo+' .preco');
 
     //pegar o texto que está no elemento
     tituloSobremesa = elementoTitulo.innerHTML;
+
+    //pegar o preço que está no elemento
+    precoSobremesa = elementoPreco.innerHTML;
 
     ativarBotaoFecharPedido();
 }
@@ -87,4 +105,31 @@ function ativarBotaoFecharPedido(){
             }
         }
     }
+}
+
+function fecharPedido(){
+
+    //calcular valor total
+    precoPrato = precoPrato.replace('R$ ', '');
+    precoBebida = precoBebida.replace('R$ ', '');
+    precoSobremesa = precoSobremesa.replace('R$ ', '');
+
+    precoPrato = precoPrato.replace(',', '.');
+    precoBebida = precoBebida.replace(',', '.');
+    precoSobremesa = precoSobremesa.replace(',', '.');
+
+    precoTotal = Number(precoPrato) + Number(precoBebida) + Number(precoSobremesa);
+
+    //montar a mensagem que será enviada com os dados dos itens selecionados
+    let msg = `Olá, gostaria de fazer o pedido:
+    - Prato: ${tituloPrato}
+    - Bebida: ${tituloBebida}
+    - Sobremesa: ${tituloSobremesa}
+    Total: R$ ${precoTotal.toFixed(2)}`;
+
+    //preparar a mensagem com o encodeURIComponent
+    const msgWhatsApp = encodeURIComponent(msg);
+
+    //abrir o whatsapp web e encaminhar a mensagem
+    window.open(`http://wa.me/99999999999?text=${msgWhatsApp}`);
 }
